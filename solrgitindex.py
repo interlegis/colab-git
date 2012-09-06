@@ -2,26 +2,20 @@
 #
 # Dependencias: solrpy iso8601
 #
-import subprocess
 import os
 import shlex
-import solr
-import iso8601
+import subprocess
 import sys
+
+import iso8601
+import solr
+
 
 def exec_cmd(command, cwd='/tmp'):
     return ''.join(subprocess.Popen(shlex.split(command),
                                     stdout=subprocess.PIPE,
                                     stderr=subprocess.PIPE,
                                     cwd=cwd).communicate())
-
-def get_msg(lines):
-    msg_lines = []
-    line = lines.pop()
-    while line != '==@@@==@@@==':
-        msg_lines += [line]
-        line = lines.pop()
-    return '\n'.join(msg_lines).strip()
 
 author_dict = {'Marcio Mazza': 'mazza',
                }
@@ -35,9 +29,9 @@ def to_docs(repo, lines):
         abbrev_commmit_hash, commmit_hash = lines.pop().split()
         author = get_author(lines.pop())
         date = iso8601.parse_date(lines.pop())
-        msg = get_msg(lines)
+        subject = lines.pop()
         yield {'Creator': author,
-               'Title': msg,
+               'Title': '[%s] - %s' % (abbrev_commmit_hash, subject),
                'Type': 'changeset',
                'UID': 'CHANGESET_' + commmit_hash,
                'getId': abbrev_commmit_hash,
@@ -47,7 +41,7 @@ def to_docs(repo, lines):
                }
 
 def atualizar_solr(solr_url, repo, repo_dir):
-    lines = exec_cmd("git log --format='%h %H%n%an%n%ai%n%s%n%n%b%n==@@@==@@@=='",
+    lines = exec_cmd("git log --format='%h %H%n%an%n%ai%n%s'",
                      repo_dir).splitlines()
     lines.reverse()
 
