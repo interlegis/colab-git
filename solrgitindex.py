@@ -31,15 +31,20 @@ def to_docs(repo, lines):
         author = get_author(lines.pop())
         date = iso8601.parse_date(lines.pop())
         subject = lines.pop()
-        yield {'Creator': author,
-               'Title': '[%s] - %s' % (abbrev_commmit_hash, subject),
-               'Type': 'changeset',
-               'UID': 'CHANGESET_' + commmit_hash,
-               'getId': abbrev_commmit_hash,
-               'path_string': u'/changeset/%s/%s' % (commmit_hash, repo),
-               'created': date,
-               'modified': date,
-               }
+        yield {
+            'revision': commmit_hash,
+            'Creator': author,
+            'collaborator': author,
+            'repos_name': repo,
+            'message': subject,
+            'UID': 'CHANGESET_' + commmit_hash,
+            'getId': abbrev_commmit_hash,
+            'Type': 'changeset',
+            'path_string': u'/changeset/%s/%s' % (commmit_hash, repo),
+            'Title': '[%s] - %s' % (abbrev_commmit_hash, subject),
+            'created': date,
+            'modified': date,
+            }
 
 def atualizar_solr(solr_url, repo, repo_dir):
     lines = exec_cmd("git log --format='%h %H%n%an%n%ai%n%s'",
