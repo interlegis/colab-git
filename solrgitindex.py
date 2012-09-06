@@ -2,6 +2,7 @@
 #
 # Dependencias: solrpy iso8601
 #
+import datetime
 import os
 import shlex
 import subprocess
@@ -50,11 +51,12 @@ def atualizar_solr(solr_url, repo, repo_dir):
         print 'Adicionando [%s]' % doc['path_string']
         print doc
         solr_conn.add(**doc)
-    print 'Enviando...'
+    print 'Enviando ao Solr...'
     solr_conn.commit()
 
 def reindex(repos_base_dir, solr_url):
-    print 'Sincronizando...'
+    print '################################################################'
+    print 'Sincronizando (%s)' % datetime.datetime.now()
     print ' * Diretorio de repos: ', repos_base_dir
     print ' * URL Solr: ', solr_url
     print
@@ -72,6 +74,7 @@ def reindex(repos_base_dir, solr_url):
         else:
             print '## repo [%s]: atualizando solr...' % repo
             atualizar_solr(solr_url, repo, repo_dir)
+        print 'Finalizado (%s)' % datetime.datetime.now()
         print
 
 if __name__ == '__main__':
