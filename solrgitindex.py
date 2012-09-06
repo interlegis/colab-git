@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+#
+# Dependencias: solrpy iso8601
+#
 import subprocess
 import os
 import shlex
