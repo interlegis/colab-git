@@ -21,7 +21,7 @@ def get_msg(lines):
     while line != '==@@@==@@@==':
         msg_lines += [line]
         line = lines.pop()
-    return '\n'.join(msg_lines)
+    return '\n'.join(msg_lines).strip()
 
 author_dict = {'Marcio Mazza': 'mazza',
                }
@@ -47,7 +47,7 @@ def to_docs(repo, lines):
                }
 
 def atualizar_solr(solr_url, repo, repo_dir):
-    lines = exec_cmd("git log --format='%h %H%n%an%n%ai%n%B%n==@@@==@@@=='",
+    lines = exec_cmd("git log --format='%h %H%n%an%n%ai%n%s%n%n%b%n==@@@==@@@=='",
                      repo_dir).splitlines()
     lines.reverse()
 
