@@ -32,11 +32,8 @@ def to_docs(repo, lines):
         date = iso8601.parse_date(lines.pop())
         subject = lines.pop()
         yield {
-            'revision': commmit_hash,
             'Creator': author,
             'collaborator': author,
-            'repos_name': repo,
-            'message': subject,
             'UID': 'CHANGESET_' + commmit_hash,
             'getId': abbrev_commmit_hash,
             'Type': 'changeset',
