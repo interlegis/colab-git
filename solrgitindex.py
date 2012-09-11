@@ -18,17 +18,20 @@ def exec_cmd(command, cwd='/tmp'):
                                     stderr=subprocess.PIPE,
                                     cwd=cwd).communicate())
 
-author_dict = {'Marcio Mazza': 'mazza',
+# TODO: consultar colab !!!!
+author_dict = {'davilima6@gmail.com': 'davilima6',
+               'marcospaulosp10@gmail.com' : 'marcospaulosp10',
+               'mazza@interlegis.leg.br' : 'mazza',
+               'thiagobernadino@interlegis.leg.br': 'thiagocesar',
                }
 
-def get_author(line):
-    # TODO: ajeitar isso !!!!
-    return author_dict.get(line, line)
+def get_author(name, email):
+    return author_dict.get(email, name)
 
 def to_docs(repo, lines):
     while lines:
         abbrev_commmit_hash, commmit_hash = lines.pop().split()
-        author = get_author(lines.pop())
+        author = get_author(lines.pop(), lines.pop())
         date = iso8601.parse_date(lines.pop())
         subject = lines.pop()
         yield {
@@ -44,7 +47,7 @@ def to_docs(repo, lines):
             }
 
 def atualizar_solr(solr_url, repo, repo_dir):
-    lines = exec_cmd("git log --format='%h %H%n%an%n%ai%n%s'",
+    lines = exec_cmd("git log --format='%h %H%n%an%ae%n%ai%n%s'",
                      repo_dir).splitlines()
     lines.reverse()
 
